@@ -1,0 +1,37 @@
+version: '2'
+services:
+  web:
+    image: "tungtu/phalcon"
+    container_name: dev_web
+    ports:
+     - "80:80"
+    volumes:
+     - /data:/data
+    networks:
+     - dev_network
+  mysql:
+    image: "percona:5.7"
+    container_name: mysql
+    ports:
+     - "3306:3306"
+    volumes:
+     - /data/mysql:/var/lib/mysql
+    environment:
+     - MYSQL_ROOT_PASSWORD=root
+    depends_on:
+     - web
+    networks:
+     - dev_network
+  mailhog:
+    image: "mailhog/mailhog"
+    container_name: mailhog
+    ports:
+     - "8025:8025"
+     - "1025:1025"
+    depends_on:
+     - web
+    networks:
+     - dev_network
+networks:
+  dev_network:
+    driver: bridge
